@@ -2,13 +2,13 @@
 replicaCount: 1
 
 image:
-  repository: sensemcp/backend
+  repository: platformbuilds/sense-backend
   tag: latest
   pullPolicy: IfNotPresent
 
 frontend:
   image:
-    repository: sensemcp/frontend
+    repository: platformbuilds/sense-frontend
     tag: latest
     pullPolicy: IfNotPresent
 
