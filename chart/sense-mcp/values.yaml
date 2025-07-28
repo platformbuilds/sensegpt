@@ -1,0 +1,37 @@
+
+replicaCount: 1
+
+image:
+  repository: sensemcp/backend
+  tag: latest
+  pullPolicy: IfNotPresent
+
+frontend:
+  image:
+    repository: sensemcp/frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations: {}
+  hosts:
+    - host: mcp.local
+      paths:
+        - path: /api
+          pathType: Prefix
+        - path: /ui
+          pathType: Prefix
+
+env:
+  CH_DB_HOST: "clickhouse"
+  CH_DB_PORT: "9000"
+  CH_DB_USER: "default"
+  CH_DB_PASSWORD: ""
+  CH_DB_NAME: "default"
+  MODEL_PATH: "/models/model.pkl"

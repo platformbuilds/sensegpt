@@ -1,0 +1,44 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sense-mcp
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: sense-mcp
+  template:
+    metadata:
+      labels:
+        app: sense-mcp
+    spec:
+      containers:
+        - name: backend
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: CH_DB_HOST
+              value: "{{ .Values.env.CH_DB_HOST }}"
+            - name: CH_DB_PORT
+              value: "{{ .Values.env.CH_DB_PORT }}"
+            - name: CH_DB_USER
+              value: "{{ .Values.env.CH_DB_USER }}"
+            - name: CH_DB_PASSWORD
+              value: "{{ .Values.env.CH_DB_PASSWORD }}"
+            - name: CH_DB_NAME
+              value: "{{ .Values.env.CH_DB_NAME }}"
+            - name: MODEL_PATH
+              value: "{{ .Values.env.MODEL_PATH }}"
+          volumeMounts:
+            - name: model-volume
+              mountPath: /models
+        - name: frontend
+          image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+          imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          ports:
+            - containerPort: 3000
+      volumes:
+        - name: model-volume
+          configMap:
+            name: model-config
